@@ -1,5 +1,3 @@
 
 Developed a real-time web-based gait and motion tracking dashboard using HTML, CSS, and JavaScript integrated with an ESP32 microcontroller—encompassing responsive user interface design, dynamic front-end scripting for live telemetry visualization, and hardware communication frameworks for real-time biomechanical analysis.
 
-
-![Uploading Picture123.png…]()
