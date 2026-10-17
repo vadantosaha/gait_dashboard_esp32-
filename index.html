@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gait / Swing Monitor — ESP32 Dual MPU6050 (Wireless)</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="dashboard-layout">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <h2>GAIT MONITOR</h2>
+      <p>ESP32 · Dual MPU6050 · WiFi HTTP</p>
+    </div>
+
+    <div class="sidebar-box">
+      <label>ESP32 ADDRESS</label>
+      <input type="text" id="wsAddr" value="http://192.168.4.1/data">
+      <button class="btn-connect" id="connectBtn">Connect</button>
+      <div class="status-row">
+        <span>Connection:</span>
+        <span><span class="dot" id="dot"></span><span id="status-text" class="badge badge-off">disconnected</span></span>
+      </div>
+      <div class="status-row">
+        <span>System Status:</span>
+        <span id="txtStatus" class="badge badge-run">RUNNING</span>
+      </div>
+    </div>
+
+    <div class="sidebar-actions">
+      <button class="btn-reset-all" id="btnResetAll"> Reset All Offsets</button>
+      <button class="btn-pause-all" id="btnPauseAll"> Pause All Display</button>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN CONTENT ============ -->
+  <main class="main-content">
+
+    <div class="grid">
+
+      <!-- Orientation / 3D gimbal panel -->
+      <div class="panel">
+        <h2>Arm Segment Orientation</h2>
+        <div class="seg-tabs">
+          <div class="seg-tab active upper" id="tabUpper" data-seg="upper">UPPER ARM</div>
+          <div class="seg-tab lower" id="tabLower" data-seg="lower">FOREARM</div>
+        </div>
+        <div class="stage">
+          <div class="gimbal" id="gimbal">
+            <div class="plate upper" id="plate"></div>
+            <div class="axis axis-x"></div>
+            <div class="axis axis-y"></div>
+            <div class="axis axis-z"></div>
+            <div class="axis-label lbl-x">X</div>
+            <div class="axis-label lbl-y">Y</div>
+            <div class="axis-label lbl-z">Z</div>
+          </div>
+        </div>
+        <div class="readouts">
+          <div class="read-card roll"><div class="lab">ROLL (X)</div><div class="val" id="rollVal">0.0°</div></div>
+          <div class="read-card pitch"><div class="lab">PITCH (Y)</div><div class="val" id="pitchVal">0.0°</div></div>
+          <div class="read-card yaw"><div class="lab">YAW (Z)</div><div class="val" id="yawVal">0.0°</div></div>
+        </div>
+        <div class="elbow-card">
+          <div class="num" id="elbowVal">0.0°</div>
+          <div class="lab">Approx. elbow flexion (pitch difference, upper vs. forearm)</div>
+        </div>
+        <p class="note"></p>
+      </div>
+
+      <!-- 2D stick-figure limb panel -->
+      <div class="panel">
+        <h2>2D Limb View</h2>
+        <div class="limb-panel-header">
+          <h3>Upper Arm + Forearm</h3>
+          <span class="status-led" id="led-limb" title="Status LED"></span>
+        </div>
+        <div class="canvas-container">
+          <canvas id="canvas-limb" width="220" height="200"></canvas>
+        </div>
+        <div class="limb-2d-readouts">
+          <div><strong style="color: var(--u-color);">Upper:</strong> <span id="txt-limb-u">0.0°</span></div>
+          <div><strong style="color: var(--l-color);">Elbow:</strong> <span id="txt-limb-l">0.0°</span></div>
+        </div>
+        <div class="limb-2d-actions">
+          <button class="btn-small btn-reset-small" id="btnResetLimb2d"> Reset</button>
+          <button class="btn-small btn-pause-small" id="btnPauseLimb2d"> Pause</button>
+        </div>
+        <p class="note"></p>
+      </div>
+
+    </div>
+
+    <!-- Gait swing waveform panel -->
+    <div class="panel">
+      <h2>Gait Swing Waveform</h2>
+      <div class="stats-row">
+        <div class="stat"><div class="num" id="stepCount">0</div><div class="lab">Detected swings</div></div>
+        <div class="stat"><div class="num" id="cadence">0</div><div class="lab">Cadence (swings/min)</div></div>
+        <div class="stat"><div class="num" id="sampleRate">0 Hz</div><div class="lab">Sample rate</div></div>
+      </div>
+      <canvas id="chart" width="900" height="260"></canvas>
+      <div class="legend">
+        <span><i class="swatch" style="background:var(--u-color)"></i>Upper arm roll</span>
+        <span><i class="swatch" style="background:var(--l-color)"></i>Forearm roll</span>
+        <span><i class="swatch" style="background:var(--z-color)"></i>Elbow flexion</span>
+      </div>
+    
+    </div>
+
+  </main>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
